@@ -1,8 +1,6 @@
 package user
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -24,22 +22,11 @@ func (h *Handler) createUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
 
-	result, err := h.Repository.CreateUser(&body)
+	successResponse, errResponse, err := h.Repository.CreateUser(&body)
 
 	if err != nil {
-		log.Fatalln(err.Error())
-		response := CreateResponseError{
-			Status:  "Internal Server error",
-			Message: "An intermal server error",
-		}
-		return c.Status(fiber.StatusInternalServerError).JSON(&response)
+		return c.Status(fiber.StatusInternalServerError).JSON(&errResponse)
 	}
 
-	response := CreateResponseSuccess{
-		Status:  "success",
-		Message: "User created",
-		UserId:  result,
-	}
-
-	return c.Status(fiber.StatusCreated).JSON(&response)
+	return c.Status(fiber.StatusCreated).JSON(&successResponse)
 }

@@ -12,11 +12,8 @@ type Repository struct {
 	Db *gorm.DB
 }
 
-func (h *Repository) CreateUser(req *CreateRequest) (UserId uint, err error){
-	// default return value
-	UserId = 0
-	err = nil
-	
+func (h *Repository) CreateUser(req *CreateRequest) (s *CreateResponseSuccess, e *CreateResponseError, err error) {
+
 	var user models.User
 
 	user.Email = req.Email
@@ -27,10 +24,24 @@ func (h *Repository) CreateUser(req *CreateRequest) (UserId uint, err error){
 
 	if result.Error != nil {
 		log.Fatalln(result.Error)
+		s = &CreateResponseSuccess{}
+
+		e = &CreateResponseError{
+			Status:  "Internal Server error",
+			Message: "An intermal server error",
+		}
+
 		err = result.Error
 		return
 	}
 
-	UserId = user.ID
+	s = &CreateResponseSuccess{
+		Status:  "success",
+		Message: "User created",
+		UserId:  user.ID,
+	}
+
+	e = &CreateResponseError{}
+	err = nil
 	return
 }
