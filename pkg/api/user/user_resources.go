@@ -1,9 +1,9 @@
 package user
 
 type CreateRequest struct {
-	Name 			string 	`json:"name"`
-	Email			string 	`json:"email"`
-	Password	string 	`json:"password"`
+	Name 			string 	`json:"name" validate:"required,alphaunicode,min=3,max=16"`
+	Email			string 	`json:"email" validate:"required,email"`
+	Password	string 	`json:"password" validate:"required,alphaunicode,min=8"`
 }
 
 type CreateResponseSuccess struct {

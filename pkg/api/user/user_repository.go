@@ -12,7 +12,7 @@ type Repository struct {
 	Db *gorm.DB
 }
 
-func (h *Repository) createUser(req *CreateRequest) (UserId uint, err error){
+func (h *Repository) CreateUser(req *CreateRequest) (UserId uint, err error){
 	// default return value
 	UserId = 0
 	err = nil
