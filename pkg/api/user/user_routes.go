@@ -5,13 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type Handler struct {
-	db *gorm.DB
-}
-
 func Register(app *fiber.App,DB *gorm.DB) {
+	repository := &Repository{
+		Db: DB,
+	}
+	
 	h := &Handler{
-		db: DB,
+		Db: DB,
+		Repository: repository,
 	}
 
 	user := app.Group("/user");
