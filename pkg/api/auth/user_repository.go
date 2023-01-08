@@ -1,60 +1,60 @@
 package auth
 
 import (
+	"errors"
 	"log"
 
 	"shortlink/pkg/common/models"
+	"shortlink/pkg/common/resources/auth"
 
 	"gorm.io/gorm"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Repository struct {
 	Db *gorm.DB
 }
 
-func NewRepository(Db *gorm.DB) *Repository{
+func NewRepository(Db *gorm.DB) *Repository {
 	return &Repository{
 		Db: Db,
 	}
 }
 
-func (h *Repository) CreateUser(req *CreateRequest) (s *CreateResponseSuccess, e *CreateResponseError, err error) {
+func (h *Repository) isEmailAvailable(email string) bool {
+	var user models.User
+
+	err := h.Db.Where("email = ?", email).First(&user).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return true
+	}
+
+	return false
+}
+
+func (h *Repository) CareateUser(req *auth.CreateRequest)  (sr *auth.CreateResponseSuccess, er *auth.CreateResponseError, c int) {
 
 	var user models.User
 
-	user.Email = req.Email
-	user.Name = req.Name
+	user = user.CreateRequest(req)
 
-	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
-	if err!= nil {
-		panic(err)
+
+	if islAvailable := h.isEmailAvailable(user.Email); !islAvailable {
+		c = 400
+		er = user.CreateResponseFail("error", "Email has been taken")
+		return 
 	}
-
-	user.Password = string(hasedPassword)
 
 	result := h.Db.Create(&user)
 
 	if result.Error != nil {
 		log.Fatalln(result.Error)
-		s = &CreateResponseSuccess{}
-
-		e = &CreateResponseError{
-			Status:  "Internal Server error",
-			Message: "An intermal server error",
-		}
-
-		err = result.Error
+		c = 500
+		er = user.CreateResponseFail("Internal server error", "An intermal server error occur")
 		return
 	}
 
-	s = &CreateResponseSuccess{
-		Status:  "success",
-		Message: "User created",
-		UserId:  user.ID,
-	}
-
-	e = &CreateResponseError{}
-	err = nil
-	return
+	c = 201
+	sr = user.CreateResponseSuccess()
+	return 
 }

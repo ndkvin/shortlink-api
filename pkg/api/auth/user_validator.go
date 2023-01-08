@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"shortlink/pkg/common/resources/auth"
+
 	"gopkg.in/go-playground/validator.v9"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,16 +17,16 @@ func NewValidation (Validator *validator.Validate) *Validation {
 	}
 }
 
-func (v *Validation) CreateUserValidation(c *fiber.Ctx, req *CreateRequest) (*CreateResponseError,error) {
+func (v *Validation) CreateUserValidation(c *fiber.Ctx, req *auth.CreateRequest) (*auth.CreateResponseError,error) {
 	if err:=v.Validator.Struct(req); err!=nil {
-		response := CreateResponseError{
+		response := auth.CreateResponseError{
 			Status: "Bad Request",
 			Message: err.Error(),
 		}
 
 		return &response, err;
 	}
-	response := CreateResponseError{}
+	response := auth.CreateResponseError{}
 
 	return &response,nil
 }

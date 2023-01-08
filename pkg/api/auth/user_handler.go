@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"shortlink/pkg/common/resources/auth"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -19,8 +21,8 @@ func NewHandler(Db *gorm.DB, 	Repository *Repository, Validation  *Validation) *
 	}
 }
 
-func (h *Handler) createUser(c *fiber.Ctx) error {
-	body := CreateRequest{}
+func (h *Handler) CreateUser(c *fiber.Ctx) error {
+	body := auth.CreateRequest{}
 
 	if err := c.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -30,11 +32,9 @@ func (h *Handler) createUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
 
-	successResponse, errResponse, err := h.Repository.CreateUser(&body)
-
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&errResponse)
-	}
-
-	return c.Status(fiber.StatusCreated).JSON(&successResponse)
+	sr, er, code := h.Repository.CareateUser(&body)
+	if code != 201 {
+		return c.Status(code).JSON(er)
+	} 
+	return c.Status(code).JSON(sr)
 }
