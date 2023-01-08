@@ -1,4 +1,4 @@
-package user
+package auth
 
 import (
 	"log"
@@ -6,10 +6,17 @@ import (
 	"shortlink/pkg/common/models"
 
 	"gorm.io/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Repository struct {
 	Db *gorm.DB
+}
+
+func NewRepository(Db *gorm.DB) *Repository{
+	return &Repository{
+		Db: Db,
+	}
 }
 
 func (h *Repository) CreateUser(req *CreateRequest) (s *CreateResponseSuccess, e *CreateResponseError, err error) {
@@ -18,7 +25,13 @@ func (h *Repository) CreateUser(req *CreateRequest) (s *CreateResponseSuccess, e
 
 	user.Email = req.Email
 	user.Name = req.Name
-	user.Password = req.Password
+
+	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), 10)
+	if err!= nil {
+		panic(err)
+	}
+
+	user.Password = string(hasedPassword)
 
 	result := h.Db.Create(&user)
 

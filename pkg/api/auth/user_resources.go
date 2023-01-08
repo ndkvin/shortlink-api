@@ -1,4 +1,4 @@
-package user
+package auth
 
 type CreateRequest struct {
 	Name 			string 	`json:"name" validate:"required,alphaunicode,min=3,max=16"`

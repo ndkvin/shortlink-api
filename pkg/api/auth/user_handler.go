@@ -1,4 +1,4 @@
-package user
+package auth
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -8,7 +8,15 @@ import (
 type Handler struct {
 	Db         *gorm.DB
 	Repository *Repository
-	Validator  *Validator
+	Validation  *Validation
+}
+
+func NewHandler(Db *gorm.DB, 	Repository *Repository, Validation  *Validation) *Handler{
+	return &Handler{
+		Db: Db,
+		Repository: Repository,
+		Validation: Validation,
+	}
 }
 
 func (h *Handler) createUser(c *fiber.Ctx) error {
@@ -18,7 +26,7 @@ func (h *Handler) createUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if response, err := h.Validator.CreateUserValidator(c, &body); err != nil {
+	if response, err := h.Validation.CreateUserValidation(c, &body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
 

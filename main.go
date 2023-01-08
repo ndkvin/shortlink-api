@@ -1,7 +1,7 @@
 package main
 
 import (
-	"shortlink/pkg/api/user"
+	"shortlink/pkg/api/auth"
 	"shortlink/pkg/common/db"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +12,7 @@ func main () {
 
 	app := fiber.New()
 
-	user.Register(app,db)
+	auth.Register(app,db)
 
 	app.Listen(":8080")
 }
