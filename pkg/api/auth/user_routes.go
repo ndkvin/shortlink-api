@@ -15,4 +15,5 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	user := app.Group("/user");
 
 	user.Post("/", h.CreateUser)
+	user.Post("/login", h.Login)
 }

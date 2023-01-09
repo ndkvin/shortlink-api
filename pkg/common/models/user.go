@@ -27,8 +27,8 @@ func (u *User) BeforeCreate(tx *gorm.DB) (error) {
   return nil
 }
 
-func (u *User) CreateRequest(req *auth.CreateRequest) (user User) {
-	user = User{
+func (u *User) CreateRequest(req *auth.CreateRequest) (user *User) {
+	user = &User{
 		Email: req.Email,
 		Name: req.Name,
 		Password: req.Password,
@@ -46,6 +46,15 @@ func (u *User) hashPassword() (error) {
 	u.Password = string(hasedPassword)
 
 	return nil
+}
+
+
+func (u *User) ComparePassword(plainPassword string) (bool) {
+	if err :=bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plainPassword)); err != nil {
+		return false
+	}
+
+	return true
 }
 
 func (u *User) CreateResponseSuccess() (res *auth.CreateResponseSuccess) {

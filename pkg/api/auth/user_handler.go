@@ -38,3 +38,23 @@ func (h *Handler) CreateUser(c *fiber.Ctx) error {
 	} 
 	return c.Status(code).JSON(sr)
 }
+
+func (h *Handler) Login(c *fiber.Ctx) error {
+	body := auth.LoginRequest{}
+
+	if err := c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if response, err := h.Validation.LoginValidation(c, &body); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(response)
+	}
+
+	sr, er, code := h.Repository.Login(&body)
+
+	if code != 200 {
+		return c.Status(code).JSON(er)
+	} 
+
+	return c.Status(200).JSON(sr)
+}
