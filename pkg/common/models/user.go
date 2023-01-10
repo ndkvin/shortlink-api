@@ -57,15 +57,15 @@ func (u *User) ComparePassword(plainPassword string) (bool) {
 	return true
 }
 
-func (u *User) CreateResponseSuccess() (res *auth.CreateResponseSuccess) {
-	data := &auth.ResponseDataUser{
+func (u *User) CreateResponse() (res *auth.CreateResponse) {
+	data := &auth.ResponseUserData{
 		ID: u.ID,
 		Email: u.Email,
 		Name: u.Name,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
-	res = &auth.CreateResponseSuccess{
+	res = &auth.CreateResponse{
 		Code: 201,
 		Status:  "created",
 		Message: "User created",

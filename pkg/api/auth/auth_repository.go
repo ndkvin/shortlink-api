@@ -33,7 +33,7 @@ func (h *Repository) isEmailAvailable(email string) bool {
 	return false
 }
 
-func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponseSuccess,err error) {
+func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponse,err error) {
 
 	var user *models.User
 
@@ -53,7 +53,7 @@ func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *aut
 		return 
 	}
 
-	successResponse = user.CreateResponseSuccess()
+	successResponse = user.CreateResponse()
 	return 
 }
 
@@ -64,7 +64,7 @@ func (h *Repository) getUserByEmail(email string) (user *models.User, err error)
 	return
 }
 
-func (h *Repository) Login(req *auth.LoginRequest) (successResponse *auth.CreateResponseSuccess, err error) {
+func (h *Repository) Login(req *auth.LoginRequest) (successResponse *auth.CreateResponse, err error) {
 
 	user, err := h.getUserByEmail(req.Email)
 

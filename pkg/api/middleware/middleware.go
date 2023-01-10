@@ -30,6 +30,7 @@ func Register(app *fiber.App) {
 	app.Use(logger.New(logger.Config{
 		Output: file,
 		Format: "[${time}] ${ip}:${port} ${status} ${latency} - ${method} ${path}\n",
+		TimeFormat: "02-Jan-2006 - 15:04:05",
 	}))
 
 	// monitoring

@@ -12,14 +12,14 @@ type CreateRequest struct {
 	Password	string 	`json:"password" validate:"required,ascii,min=8"`
 }
 
-type CreateResponseSuccess struct {
+type CreateResponse struct {
 	Code			int 							`json:"code"`
 	Status 		string 						`json:"status"`
 	Message 	string 						`json:"message"`
-	Data 			*ResponseDataUser `json:"data"`
+	Data 			*ResponseUserData `json:"data"`
 }
 
-type ResponseDataUser struct {
+type ResponseUserData struct {
 	ID 				uuid.UUID `json:"id"`
 	Email     string 		`json:"email"`
 	Name			string 		`json:"name"`
