@@ -28,15 +28,16 @@ func (h *Handler) CreateUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if response, err := h.Validation.CreateUserValidation(c, &body); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(response)
+	if err := h.Validation.CreateUserValidation(c, &body); err != nil {
+		return err
 	}
 
-	sr, er, code := h.Repository.CareateUser(&body)
-	if code != 201 {
-		return c.Status(code).JSON(er)
-	} 
-	return c.Status(code).JSON(sr)
+	successResponse, err := h.Repository.CareateUser(&body)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(successResponse)
 }
 
 func (h *Handler) Login(c *fiber.Ctx) error {
@@ -46,15 +47,15 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if response, err := h.Validation.LoginValidation(c, &body); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(response)
+	if err := h.Validation.LoginValidation(c, &body); err != nil {
+		return err
 	}
 
-	sr, er, code := h.Repository.Login(&body)
+	successResponse, err := h.Repository.Login(&body)
 
-	if code != 200 {
-		return c.Status(code).JSON(er)
+	if err != nil {
+		return err
 	} 
 
-	return c.Status(200).JSON(sr)
+	return c.Status(200).JSON(successResponse)
 }

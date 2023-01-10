@@ -7,6 +7,7 @@ import (
 	"shortlink/pkg/common/models"
 	"shortlink/pkg/common/resources/auth"
 
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -32,16 +33,14 @@ func (h *Repository) isEmailAvailable(email string) bool {
 	return false
 }
 
-func (h *Repository) CareateUser(req *auth.CreateRequest)  (sr *auth.CreateResponseSuccess, er *auth.CreateResponseError, c int) {
+func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponseSuccess,err error) {
 
 	var user *models.User
 
 	user = user.CreateRequest(req)
 
-
 	if islAvailable := h.isEmailAvailable(user.Email); !islAvailable {
-		c = 400
-		er = user.CreateResponseFail("error", "Email has been taken")
+		err = fiber.NewError(fiber.StatusNotFound, "Email has been taken")
 		return 
 	}
 
@@ -49,45 +48,35 @@ func (h *Repository) CareateUser(req *auth.CreateRequest)  (sr *auth.CreateRespo
 
 	if result.Error != nil {
 		log.Fatalln(result.Error)
-		c = 500
-		er = user.CreateResponseFail("Internal server error", "An intermal server error occur")
-		return
+		err = fiber.ErrInternalServerError
+		
+		return 
 	}
 
-	c = 201
-	sr = user.CreateResponseSuccess()
+	successResponse = user.CreateResponseSuccess()
 	return 
 }
 
 
 func (h *Repository) getUserByEmail(email string) (user *models.User, err error) {
-
 	err = h.Db.Where("email = ?", email).First(&user).Error
 
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return
-	}
-
-	return 
+	return
 }
 
-func (h *Repository) Login(req *auth.LoginRequest) (sr *auth.CreateResponseSuccess, er *auth.CreateResponseError, c int) {
-	var user *models.User
-	var err error
-	user, err = h.getUserByEmail(req.Email)
+func (h *Repository) Login(req *auth.LoginRequest) (successResponse *auth.CreateResponseSuccess, err error) {
+
+	user, err := h.getUserByEmail(req.Email)
 
 	//email not found
 	if err != nil {
-		er = user.CreateResponseFail("Not Found", "User email not found")
-		c = 404
-
+		err = fiber.NewError(fiber.StatusNotFound,"User email not found")
 		return
 	}
 
 	// password not match
 	if res := user.ComparePassword(req.Password); !res {
-		er = user.CreateResponseFail("Bad Request", "Password not match in database")
-		c = 400
+		err = fiber.NewError(fiber.StatusBadRequest, "Password not match")
 	}
 	
 	return

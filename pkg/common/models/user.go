@@ -66,18 +66,10 @@ func (u *User) CreateResponseSuccess() (res *auth.CreateResponseSuccess) {
 		UpdatedAt: u.UpdatedAt,
 	}
 	res = &auth.CreateResponseSuccess{
-		Status:  "success",
+		Code: 201,
+		Status:  "created",
 		Message: "User created",
 		Data: data,
-	}
-
-	return
-}
-
-func (u *User) CreateResponseFail(error string, message string) (res *auth.CreateResponseError){
-	res = &auth.CreateResponseError{
-		Status:  error,
-		Message: message,
 	}
 
 	return
