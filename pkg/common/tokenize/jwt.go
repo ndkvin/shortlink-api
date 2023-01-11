@@ -31,7 +31,7 @@ func GenereateToken(userId string) (token string, err error) {
 	return
 }
 
-func DecodeJWT(tokenString string) (userID string) {
+func GetUserId(tokenString string) (userID string) {
 	config, _ := config.InitConfig()
 	mySigningKey := []byte(config.JWT_TOKEN)
 	

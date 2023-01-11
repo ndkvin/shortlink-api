@@ -28,7 +28,7 @@ func Register(app *fiber.App,Db *gorm.DB) {
 		
 		a:=c.Locals("user").(*jwt.Token)
 
-		test :=tokenize.DecodeJWT(a.Raw)
+		test :=tokenize.GetUserId(a.Raw)
 		fmt.Printf("test: %v\n", test)
 		return c.SendStatus(200)
 	})
