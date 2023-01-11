@@ -12,14 +12,7 @@ import (
 )
 
 func InitDB() *gorm.DB {
-	// load  env
-	config, err := config.InitConfig()
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",config.DB_USER, config.DB_PASSWORD,config.HOST,config.PORT,config.DB_NAME )
+	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",config.GetEnv("DB_USER"), config.GetEnv("DB_PASSWORD"),config.GetEnv("HOST"),config.GetEnv("PORT"),config.GetEnv("DB_NAME") )
 	db, e := gorm.Open(mysql.Open(url), &gorm.Config{})
 
 	if e != nil {

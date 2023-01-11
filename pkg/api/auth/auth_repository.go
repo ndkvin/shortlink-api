@@ -36,7 +36,7 @@ func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *aut
 	user = user.CreateRequest(req)
 
 	if islAvailable := h.isEmailAvailable(user.Email); !islAvailable {
-		err = fiber.NewError(fiber.StatusNotFound, "Email has been taken")
+		err = fiber.NewError(fiber.StatusBadRequest, "Email has been taken")
 		return 
 	}
 

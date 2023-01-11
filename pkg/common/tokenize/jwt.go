@@ -10,9 +10,7 @@ import (
 )
 
 func GenereateToken(userId string) (token string, err error) {
-	config, _ := config.InitConfig()
-
-	mySigningKey := []byte(config.JWT_TOKEN)
+	mySigningKey := []byte(config.GetEnv("JWT_TOKEN"))
 
 	t := jwt.New(jwt.SigningMethodHS256)
 
@@ -32,8 +30,7 @@ func GenereateToken(userId string) (token string, err error) {
 }
 
 func GetUserId(tokenString string) (userID string) {
-	config, _ := config.InitConfig()
-	mySigningKey := []byte(config.JWT_TOKEN)
+	mySigningKey := []byte(config.GetEnv("JWT_TOKEN"))
 	
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:

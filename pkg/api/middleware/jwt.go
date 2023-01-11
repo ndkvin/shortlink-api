@@ -8,9 +8,7 @@ import (
 )
 
 func Auth() fiber.Handler {
-	config, _ := config.InitConfig()
-
-	SigningKey := []byte(config.JWT_TOKEN)
+	SigningKey := []byte(config.GetEnv("JWT_TOKEN"))
 
 	return jwtfiber.New(jwtfiber.Config{
 		SigningKey:   []byte(SigningKey),
