@@ -53,7 +53,7 @@ func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *aut
 		return 
 	}
 
-	successResponse = user.CreateResponse()
+	successResponse = user.CreateRegisterResponse()
 	return 
 }
 
@@ -64,9 +64,9 @@ func (h *Repository) getUserByEmail(email string) (user *models.User, err error)
 	return
 }
 
-func (h *Repository) Login(req *auth.LoginRequest) (successResponse *auth.CreateResponse, err error) {
+func (h *Repository) Login(req *auth.LoginRequest) (user *models.User,err error) {
 
-	user, err := h.getUserByEmail(req.Email)
+	user, err = h.getUserByEmail(req.Email)
 
 	//email not found
 	if err != nil {

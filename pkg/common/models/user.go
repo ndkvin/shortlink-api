@@ -57,7 +57,7 @@ func (u *User) ComparePassword(plainPassword string) (bool) {
 	return true
 }
 
-func (u *User) CreateResponse() (res *auth.CreateResponse) {
+func (u *User) CreateRegisterResponse() (res *auth.CreateResponse) {
 	data := &auth.ResponseUserData{
 		ID: u.ID,
 		Email: u.Email,
@@ -70,6 +70,17 @@ func (u *User) CreateResponse() (res *auth.CreateResponse) {
 		Status:  "created",
 		Message: "User created",
 		Data: data,
+	}
+
+	return
+}
+
+func (u *User) CreateLoginResponse(accessToken string) (res *auth.LoginResponse) {
+	res = &auth.LoginResponse{
+		Code: 200,
+		Status: "OK",
+		Message: "Login Success",
+		AccessToken: accessToken,
 	}
 
 	return

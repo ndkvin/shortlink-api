@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"shortlink/pkg/common/tokenize"
 	"shortlink/pkg/common/resources/auth"
 
 	"github.com/gofiber/fiber/v2"
@@ -51,11 +52,14 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	successResponse, err := h.Repository.Login(&body)
+	user, err := h.Repository.Login(&body)
 
 	if err != nil {
 		return err
 	} 
 
-	return c.Status(200).JSON(successResponse)
+	jwtToken, err := tokenize.GenereateToken(user.ID.String())
+	response := user.CreateLoginResponse(jwtToken)
+	
+	return c.Status(200).JSON(response)
 }

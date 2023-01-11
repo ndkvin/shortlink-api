@@ -12,6 +12,7 @@ type Config struct {
 	DB_USER 		string
 	DB_PASSWORD string
 	DB_NAME 		string
+	JWT_TOKEN		string
 }
 
 func InitConfig() (Config, error) {
@@ -27,6 +28,7 @@ func InitConfig() (Config, error) {
 	c.DB_USER = os.Getenv("DB_USER")
 	c.DB_PASSWORD = os.Getenv("DB_PASSWORD")
 	c.DB_NAME = os.Getenv("DB_NAME")
+	c.JWT_TOKEN = os.Getenv("JWT_TOKEN")
 
 	return c, err
 }

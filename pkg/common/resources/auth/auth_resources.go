@@ -31,3 +31,10 @@ type LoginRequest struct {
 	Email			string 	`json:"email" validate:"required,email"`
 	Password	string	`json:"password" validate:"required,ascii,min=3,max=16"`
 }
+
+type LoginResponse struct {
+	Code				int			`json:"code"`
+	Status 			string	`json:"status"`
+	Message 		string	`json:"message"`
+	AccessToken string	`json:"access_token"`
+}
