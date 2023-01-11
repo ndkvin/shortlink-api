@@ -26,11 +26,7 @@ func (h *Repository) isEmailAvailable(email string) bool {
 
 	err := h.Db.Where("email = ?", email).First(&user).Error
 
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return true
-	}
-
-	return false
+	return errors.Is(err, gorm.ErrRecordNotFound)
 }
 
 func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponse,err error) {

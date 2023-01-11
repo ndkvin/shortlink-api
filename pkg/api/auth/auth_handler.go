@@ -58,7 +58,7 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		return err
 	} 
 
-	jwtToken, err := tokenize.GenereateToken(user.ID.String())
+	jwtToken, _ := tokenize.GenereateToken(user.ID.String())
 	response := user.CreateLoginResponse(jwtToken)
 	
 	return c.Status(200).JSON(response)
