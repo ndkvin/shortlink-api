@@ -59,12 +59,10 @@ func (r *Repository) getUserByEmail(email string) (user *models.User, err error)
 }
 
 func (r *Repository) updateLogin(user *models.User) (err error) {
-	r.Db.First(&user)
-
 	timeNow := time.Now()
 	user.LastLogin = &timeNow
 	
-	if res := r.Db.Save(&user); res.Error != nil {
+	if res := r.Db.Save(user); res.Error != nil {
 		return fiber.ErrInternalServerError
 	}
 
@@ -117,7 +115,7 @@ func (r *Repository) ChangePassword(req *auth.ChangePasswordRequest, userId stri
 
 	//email not found
 	if err != nil {
-		err = fiber.NewError(fiber.StatusNotFound, "User email not found")
+		err = fiber.NewError(fiber.StatusNotFound, "User id not found")
 		return
 	}
 
