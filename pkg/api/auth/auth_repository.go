@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"log"
+	"time"
 
 	"shortlink/pkg/common/models"
 	"shortlink/pkg/common/resources/auth"
@@ -21,26 +22,26 @@ func NewRepository(Db *gorm.DB) *Repository {
 	}
 }
 
-func (h *Repository) isEmailAvailable(email string) bool {
+func (r *Repository) isEmailAvailable(email string) bool {
 	var user models.User
 
-	err := h.Db.Where("email = ?", email).First(&user).Error
+	err := r.Db.Where("email = ?", email).First(&user).Error
 
 	return errors.Is(err, gorm.ErrRecordNotFound)
 }
 
-func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponse,err error) {
+func (r *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponse,err error) {
 
 	var user *models.User
 
 	user = user.CreateRequest(req)
 
-	if islAvailable := h.isEmailAvailable(user.Email); !islAvailable {
+	if islAvailable := r.isEmailAvailable(user.Email); !islAvailable {
 		err = fiber.NewError(fiber.StatusBadRequest, "Email has been taken")
 		return 
 	}
 
-	result := h.Db.Create(&user)
+	result := r.Db.Create(&user)
 
 	if result.Error != nil {
 		log.Fatalln(result.Error)
@@ -54,15 +55,25 @@ func (h *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *aut
 }
 
 
-func (h *Repository) getUserByEmail(email string) (user *models.User, err error) {
-	err = h.Db.Where("email = ?", email).First(&user).Error
+func (r *Repository) getUserByEmail(email string) (user *models.User, err error) {
+	err = r.Db.Where("email = ?", email).First(&user).Error
 
 	return
 }
 
-func (h *Repository) Login(req *auth.LoginRequest) (user *models.User,err error) {
+func (r *Repository) updateLogin(user *models.User) (err error) {
+	r.Db.First(&user)
+	timeNow := time.Now()
 
-	user, err = h.getUserByEmail(req.Email)
+	user.LastLogin = &timeNow
+	r.Db.Save(&user)
+
+	return
+}
+
+func (r *Repository) Login(req *auth.LoginRequest) (user *models.User,err error) {
+
+	user, err = r.getUserByEmail(req.Email)
 
 	//email not found
 	if err != nil {
@@ -75,5 +86,10 @@ func (h *Repository) Login(req *auth.LoginRequest) (user *models.User,err error)
 		err = fiber.NewError(fiber.StatusBadRequest, "Password not match")
 	}
 	
+	if err = r.updateLogin(user); err != nil {
+		err = fiber.ErrInternalServerError
+		return
+	}
+
 	return
 }
