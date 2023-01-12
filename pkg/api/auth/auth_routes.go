@@ -21,7 +21,9 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	user := app.Group("/user");
 
 	user.Post("/", h.CreateUser)
+	user.Put("/", middleware.Auth(), h.ChangePassword)
 	user.Post("/login", h.Login)
+	
 	user.Post("/test", middleware.Auth(), func(c *fiber.Ctx) error {
 		
 		a:=c.Locals("user").(*jwt.Token)

@@ -19,7 +19,7 @@ func NewValidation (Validator *validator.Validate) (validation *Validation) {
 	return
 }
 
-func (v *Validation) CreateUserValidation(c *fiber.Ctx, req *auth.CreateRequest) (err error) {
+func (v *Validation) CreateUserValidation(req *auth.CreateRequest) (err error) {
 	if err = v.Validator.Struct(req); err!=nil {
 		err = fiber.NewError(400, err.Error())
 		return
@@ -28,8 +28,17 @@ func (v *Validation) CreateUserValidation(c *fiber.Ctx, req *auth.CreateRequest)
 	return
 }
 
-func (v *Validation) LoginValidation(c *fiber.Ctx, req *auth.LoginRequest) (err error) {
+func (v *Validation) LoginValidation(req *auth.LoginRequest) (err error) {
 	if err = v.Validator.Struct(req); err!=nil {
+		err = fiber.NewError(400, err.Error())
+		return
+	}
+
+	return
+}
+
+func (v *Validation) ChangePasswordValidation(req *auth.ChangePasswordRequest) (err error) {
+	if err = v.Validator.Struct(req); err != nil {
 		err = fiber.NewError(400, err.Error())
 		return
 	}

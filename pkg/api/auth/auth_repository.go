@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"shortlink/pkg/common/models"
@@ -30,7 +29,7 @@ func (r *Repository) isEmailAvailable(email string) bool {
 	return errors.Is(err, gorm.ErrRecordNotFound)
 }
 
-func (r *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *auth.CreateResponse,err error) {
+func (r *Repository) CareateUser(req *auth.CreateRequest) (successResponse *auth.CreateResponse, err error) {
 
 	var user *models.User
 
@@ -38,22 +37,20 @@ func (r *Repository) CareateUser(req *auth.CreateRequest)  (successResponse *aut
 
 	if islAvailable := r.isEmailAvailable(user.Email); !islAvailable {
 		err = fiber.NewError(fiber.StatusBadRequest, "Email has been taken")
-		return 
+		return
 	}
 
 	result := r.Db.Create(&user)
 
 	if result.Error != nil {
-		log.Fatalln(result.Error)
 		err = fiber.ErrInternalServerError
-		
-		return 
+
+		return
 	}
 
 	successResponse = user.CreateRegisterResponse()
-	return 
+	return
 }
-
 
 func (r *Repository) getUserByEmail(email string) (user *models.User, err error) {
 	err = r.Db.Where("email = ?", email).First(&user).Error
@@ -63,33 +60,78 @@ func (r *Repository) getUserByEmail(email string) (user *models.User, err error)
 
 func (r *Repository) updateLogin(user *models.User) (err error) {
 	r.Db.First(&user)
-	timeNow := time.Now()
 
+	timeNow := time.Now()
 	user.LastLogin = &timeNow
-	r.Db.Save(&user)
+	
+	if res := r.Db.Save(&user); res.Error != nil {
+		return fiber.ErrInternalServerError
+	}
 
 	return
 }
 
-func (r *Repository) Login(req *auth.LoginRequest) (user *models.User,err error) {
+func (r *Repository) Login(req *auth.LoginRequest) (user *models.User, err error) {
 
 	user, err = r.getUserByEmail(req.Email)
 
 	//email not found
 	if err != nil {
-		err = fiber.NewError(fiber.StatusNotFound,"User email not found")
+		err = fiber.NewError(fiber.StatusNotFound, "User email not found")
 		return
 	}
 
 	// password not match
 	if res := user.ComparePassword(req.Password); !res {
 		err = fiber.NewError(fiber.StatusBadRequest, "Password not match")
+		return
 	}
-	
+
 	if err = r.updateLogin(user); err != nil {
 		err = fiber.ErrInternalServerError
 		return
 	}
 
+	return
+}
+
+func (r *Repository) getUserById(userId string) (user *models.User, err error) {
+	err = r.Db.Where("id = ?", userId).First(&user).Error
+
+	return
+}
+
+func (r *Repository) doChangePassword(user *models.User, newPassword string) (err error) {
+	user.Password  = newPassword
+	user.HashPassword()
+
+	if res := r.Db.Save(user); res.Error != nil {
+		return fiber.ErrInternalServerError
+	}
+
+	return
+}
+
+func (r *Repository) ChangePassword(req *auth.ChangePasswordRequest, userId string) (successResponse *auth.ChangePasswordResponse, err error) {
+	user, err := r.getUserById(userId)
+
+	//email not found
+	if err != nil {
+		err = fiber.NewError(fiber.StatusNotFound, "User email not found")
+		return
+	}
+
+	// Old password not match
+	if res := user.ComparePassword(req.OldPassword); !res {
+		err = fiber.NewError(fiber.StatusBadRequest, "Old password not match")
+		return
+	}
+
+	// do change password
+	if err = r.doChangePassword(user, req.NewPassword); err != nil {
+		return
+	}
+
+	successResponse = user.CreateChangePasswordResponse()
 	return
 }

@@ -1,10 +1,11 @@
 package auth
 
 import (
-	"shortlink/pkg/common/tokenize"
 	"shortlink/pkg/common/resources/auth"
+	"shortlink/pkg/common/tokenize"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
 )
 
@@ -22,34 +23,34 @@ func NewHandler(Db *gorm.DB, 	Repository *Repository, Validation  *Validation) *
 	}
 }
 
-func (h *Handler) CreateUser(c *fiber.Ctx) error {
+func (h *Handler) CreateUser(c *fiber.Ctx) (err error) {
 	body := auth.CreateRequest{}
 
 	if err := c.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if err := h.Validation.CreateUserValidation(c, &body); err != nil {
-		return err
+	if err = h.Validation.CreateUserValidation(&body); err != nil {
+		return
 	}
 
 	successResponse, err := h.Repository.CareateUser(&body)
 	if err != nil {
-		return err
+		return
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(successResponse)
 }
 
-func (h *Handler) Login(c *fiber.Ctx) error {
+func (h *Handler) Login(c *fiber.Ctx) (err error) {
 	body := auth.LoginRequest{}
 
 	if err := c.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	if err := h.Validation.LoginValidation(c, &body); err != nil {
-		return err
+	if err = h.Validation.LoginValidation(&body); err != nil {
+		return
 	}
 
 	user, err := h.Repository.Login(&body)
@@ -61,5 +62,29 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 	jwtToken, _ := tokenize.GenereateToken(user.ID.String())
 	response := user.CreateLoginResponse(jwtToken)
 	
+	return c.Status(200).JSON(response)
+}
+
+func (h *Handler) ChangePassword(c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId :=tokenize.GetUserId(jwt.Raw)
+
+	body := auth.ChangePasswordRequest{}
+
+	if err = c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err = h.Validation.ChangePasswordValidation(&body); err != nil{
+		return
+	}
+	
+	response, err := h.Repository.ChangePassword(&body, userId)
+
+	if err != nil {
+		return
+	}
+
 	return c.Status(200).JSON(response)
 }

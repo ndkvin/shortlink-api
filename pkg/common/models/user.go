@@ -24,7 +24,7 @@ type User struct {
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	u.ID = uuid.New()
-	u.hashPassword()
+	u.HashPassword()
 
 	return nil
 }
@@ -39,7 +39,7 @@ func (u *User) CreateRequest(req *auth.CreateRequest) (user *User) {
 	return
 }
 
-func (u *User) hashPassword() error {
+func (u *User) HashPassword() error {
 	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 10)
 	if err != nil {
 		log.Fatalln(err)
@@ -82,6 +82,16 @@ func (u *User) CreateLoginResponse(accessToken string) (res *auth.LoginResponse)
 		Status:      "OK",
 		Message:     "Login Success",
 		AccessToken: accessToken,
+	}
+
+	return
+}
+
+func (u *User) CreateChangePasswordResponse() (res *auth.ChangePasswordResponse) {
+	res = &auth.ChangePasswordResponse{
+		Code: 200,
+		Status: "OK",
+		Message: "Change Password Success",
 	}
 
 	return

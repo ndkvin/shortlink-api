@@ -21,6 +21,8 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 				"message": err.Error(),
 				"code": code,
 			})
+
+			return err
 		}
 		
 		if code == 400 {
@@ -29,6 +31,8 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 				"message": err.Error(),
 				"code": code,
 			})
+
+			return err
 		}
 
 		if code == 401 {
@@ -37,6 +41,8 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 				"message": err.Error(),
 				"code": code,
 			})
+
+			return err
 		}
 
 		if code == 500 {
@@ -46,8 +52,8 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 				"code": code,
 			})
 
-			return nil
+			return err
 		}
 
-    return nil
+    return err
 }
