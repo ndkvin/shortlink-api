@@ -19,7 +19,7 @@ func InitDB() *gorm.DB {
 		log.Fatalln(e)
 	}
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{}, &models.Link{}, &models.VisitLink{})
 
 	return db
 }

@@ -12,7 +12,7 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
+	ID        uuid.UUID
 	Email     string
 	Name      string
 	Password  string
