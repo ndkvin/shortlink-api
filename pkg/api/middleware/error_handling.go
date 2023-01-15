@@ -15,16 +15,6 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
         code = e.Code
     }
 		
-		if code == 404 {
-			err = ctx.Status(code).JSON(fiber.Map{
-				"status": "Not Found",
-				"message": err.Error(),
-				"code": code,
-			})
-
-			return err
-		}
-		
 		if code == 400 {
 			err = ctx.Status(code).JSON(fiber.Map{
 				"status": "Bad Request",
@@ -45,6 +35,16 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 			return err
 		}
 
+		if code == 404 {
+			err = ctx.Status(code).JSON(fiber.Map{
+				"status": "Not Found",
+				"message": err.Error(),
+				"code": code,
+			})
+
+			return err
+		}
+		
 		if code == 500 {
 			err = ctx.Status(code).JSON(fiber.Map{
 				"status": "Internal Server Error",

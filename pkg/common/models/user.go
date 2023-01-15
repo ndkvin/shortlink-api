@@ -12,7 +12,7 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID
+	ID        string
 	Email     string
 	Name      string
 	Password  string
@@ -23,7 +23,7 @@ type User struct {
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {
-	u.ID = uuid.New()
+	u.ID = uuid.NewString()
 	u.HashPassword()
 
 	return nil

@@ -59,7 +59,7 @@ func (h *Handler) Login(c *fiber.Ctx) (err error) {
 		return err
 	} 
 
-	jwtToken, _ := tokenize.GenereateToken(user.ID.String())
+	jwtToken, _ := tokenize.GenereateToken(user.ID)
 	response := user.CreateLoginResponse(jwtToken)
 	
 	return c.Status(200).JSON(response)
@@ -68,7 +68,10 @@ func (h *Handler) Login(c *fiber.Ctx) (err error) {
 func (h *Handler) ChangePassword(c *fiber.Ctx) (err error) {
 	jwt := c.Locals("user").(*jwt.Token)
 
-	userId :=tokenize.GetUserId(jwt.Raw)
+	userId, err :=tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
 
 	body := auth.ChangePasswordRequest{}
 

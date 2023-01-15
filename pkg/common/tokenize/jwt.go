@@ -3,10 +3,12 @@ package tokenize
 import (
 	"fmt"
 	"shortlink/pkg/common/config"
+	"shortlink/pkg/common/models"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"gorm.io/gorm"
 )
 
 func GenereateToken(userId string) (token string, err error) {
@@ -29,7 +31,7 @@ func GenereateToken(userId string) (token string, err error) {
 	return
 }
 
-func GetUserId(tokenString string) (userID string) {
+func GetUserId(DB *gorm.DB, tokenString string) (userID string, err error) {
 	mySigningKey := []byte(config.GetEnv("JWT_TOKEN"))
 	
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -47,5 +49,17 @@ func GetUserId(tokenString string) (userID string) {
 	}
 
 	userID = fmt.Sprintf("%v", claims["id"])
+	if err = getUserId(DB,userID); err != nil {
+		err = fiber.NewError(fiber.StatusUnauthorized, "Invalid or expired")
+		return
+	}
+	return
+}
+
+func getUserId(DB *gorm.DB, userId string) (err error) {
+	var user models.User
+
+	err = DB.Where("id = ?", userId).First(&user).Error
+
 	return
 }

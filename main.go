@@ -2,6 +2,7 @@ package main
 
 import (
 	"shortlink/pkg/api/auth"
+	"shortlink/pkg/api/link"
 	"shortlink/pkg/api/middleware"
 	"shortlink/pkg/common/db"
 
@@ -17,8 +18,9 @@ func main () {
 	
 	middleware.Register(app)
 
-	// register api
-	auth.Register(app,db)
+	// register service
+	auth.Register(app, db)
+	link.Register(app, db)
 
 	app.Listen(":8080")
 }
