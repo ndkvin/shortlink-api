@@ -103,3 +103,20 @@ func (l *Link) CreateDetailResponse() (res *link.GetLinkResponse) {
 
 	return
 }
+
+func (l *Link) EditLinkResponse() (res *link.CreateResponse) {
+	data := &link.CreateResponseData{
+		Id: l.ID,
+		Slug: l.Slug,
+		Link: l.Link,
+	}
+
+	res = &link.CreateResponse{
+		Code: 201,
+		Status: "Edited",
+		Message: "Link Edited",
+		Data: data,
+	}
+
+	return
+}

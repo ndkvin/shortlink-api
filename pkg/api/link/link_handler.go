@@ -26,7 +26,7 @@ func NewHandler(Db *gorm.DB, 	Repository *Repository, Validation  *Validation) *
 func (h *Handler) CreateLink(c *fiber.Ctx) (err error) {
 	jwt := c.Locals("user").(*jwt.Token)
 
-	userId, err :=tokenize.GetUserId(h.Db, jwt.Raw)
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
 	if err != nil {
 		return
 	}
@@ -83,4 +83,30 @@ func (h *Handler) GetLink(c *fiber.Ctx) (err error) {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(res)
+}
+
+func (h *Handler) EditLink(c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
+
+	body := link.CreateRequest{}
+
+	if err := c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err = h.Validation.CreateLinkValidation(&body); err != nil {
+		return
+	}
+
+	res, err := h.Repository.EditLink(&body, c.Params("id"), userId)
+	if err != nil {
+		return
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(res)
 }

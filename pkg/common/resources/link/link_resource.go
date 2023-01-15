@@ -18,8 +18,8 @@ type CreateResponse struct {
 
 type CreateResponseData struct {
 	Id 				string 	`json:"id"`
-	Slug 			string 	`json:"name"`
-	Link			string 	`json:"email"`
+	Slug 			string 	`json:"slug"`
+	Link			string 	`json:"link"`
 }
 
 type GetAllLinkData struct {
