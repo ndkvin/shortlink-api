@@ -17,21 +17,39 @@ type CreateResponse struct {
 }
 
 type CreateResponseData struct {
-	Id 				string `json:"id"`
+	Id 				string 	`json:"id"`
 	Slug 			string 	`json:"name"`
 	Link			string 	`json:"email"`
 }
 
 type GetAllLinkData struct {
-	ID 				string `json:"id"`
-	Slug 			string `json:"slug"`
-	Link 			string `json:"link"`
-	IsLock 		bool	`json:"is_lock"`
+	ID 				string 		`json:"id"`
+	Slug 			string 		`json:"slug"`
+	Link 			string 		`json:"link"`
+	Password	bool 			`json:"password"`
+	IsLock 		bool			`json:"is_lock"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
 type GetAllLinkResponse struct {
-	Code			int 								`json:"code"`
-	Status 		string 							`json:"status"`
-	Data 			[]GetAllLinkData 		`json:"data"`
+	Code			int 							`json:"code"`
+	Status 		string 						`json:"status"`
+	Data 			[]GetAllLinkData 	`json:"data"`
+}
+
+type GetLinkResponse struct {
+	Code			int 					`json:"code"`
+	Status 		string 				`json:"status"`
+	Data 			*GetLinkData 	`json:"data"`
+}
+
+type GetLinkData struct {
+	ID 				string 		`json:"id"`
+	Slug 			string 		`json:"slug"`
+	Link 			string 		`json:"link"`
+	Password	bool 			`json:"password"`
+	IsLock 		bool			`json:"is_lock"`
+	Qr 				string 		`json:"qr"`
+	CreatedAt time.Time	`json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

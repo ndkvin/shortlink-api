@@ -18,7 +18,7 @@ type CreateResponse struct {
 }
 
 type ResponseUserData struct {
-	ID 				string `json:"id"`
+	ID 				string 		`json:"id"`
 	Email     string 		`json:"email"`
 	Name			string 		`json:"name"`
 	CreatedAt time.Time `json:"created_at"`

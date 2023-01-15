@@ -55,12 +55,50 @@ func (l *Link) CreateLinkResponse() (res *link.CreateResponse) {
 }
 
 func (l *Link) CreateResponse() (res link.GetAllLinkData) {
+	var isPassworded bool
+
+	if l.Password == "" {
+		isPassworded = false
+	} else {
+		isPassworded =true
+	}
+
 	res = link.GetAllLinkData{
 		ID: l.ID,
     Slug : l.Slug,
     Link: l.Link,
+		Password: isPassworded,
     IsLock: l.IsLock,
     CreatedAt: l.CreatedAt,
+	}
+
+	return
+}
+
+func (l *Link) CreateDetailResponse() (res *link.GetLinkResponse) {
+	var isPassworded bool
+
+	if l.Password == "" {
+		isPassworded = false
+	} else {
+		isPassworded =true
+	}
+
+	data := &link.GetLinkData{
+		ID: l.ID,
+    Slug: l.Slug,
+    Link: l.Link,
+    IsLock: l.IsLock,
+    Qr: l.Qr,
+		Password: isPassworded,
+    CreatedAt: l.CreatedAt,
+    UpdatedAt: l.UpdatedAt,
+	}
+	
+	res = &link.GetLinkResponse{
+		Code: 200,
+    Status: "OK",
+    Data: data,
 	}
 
 	return

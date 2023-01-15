@@ -55,7 +55,7 @@ func (r *Repository) CreateLink(req *link.CreateRequest, userId string) (res *li
 func (r *Repository) GetAllLink(userId string) (res *link.GetAllLinkResponse ,err error) {
 	var links []models.Link
 
-	if err = r.Db.Where("user_id = ?", userId).Find(&links).Error; err != nil {
+	if err = r.Db.Order("created_at desc").Where("user_id = ?", userId).Find(&links).Error; err != nil {
 		return
 	}
 
@@ -68,5 +68,19 @@ func (r *Repository) GetAllLink(userId string) (res *link.GetAllLinkResponse ,er
 	for i := range(links) {
 		res.Data[i] = links[i].CreateResponse()
 	}
+
+	return
+}
+
+func (r *Repository) GetLink(id, userId string) (res *link.GetLinkResponse, err error) {
+	var link models.Link
+
+	if err = r.Db.Where("id = ? AND user_id = ?", id, userId).First(&link).Error; err != nil {
+		err = fiber.NewError(fiber.StatusNotFound, "Link Not Found")
+		return
+	}
+
+	res = link.CreateDetailResponse()
+	
 	return
 }
