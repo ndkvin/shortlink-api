@@ -53,3 +53,15 @@ func (l *Link) CreateLinkResponse() (res *link.CreateResponse) {
 
 	return
 }
+
+func (l *Link) CreateResponse() (res link.GetAllLinkData) {
+	res = link.GetAllLinkData{
+		ID: l.ID,
+    Slug : l.Slug,
+    Link: l.Link,
+    IsLock: l.IsLock,
+    CreatedAt: l.CreatedAt,
+	}
+
+	return
+}

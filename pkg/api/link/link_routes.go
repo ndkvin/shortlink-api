@@ -17,4 +17,5 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	user := app.Group("/link");
 
 	user.Post("/", middleware.Auth(), h.CreateLink)
+	user.Get("/", middleware.Auth(), h.GetAllLink)
 }

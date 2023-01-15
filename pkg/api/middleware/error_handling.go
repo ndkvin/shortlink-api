@@ -48,7 +48,7 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 		if code == 500 {
 			err = ctx.Status(code).JSON(fiber.Map{
 				"status": "Internal Server Error",
-				"message": "An intermal server error occur",
+				"message": err.Error(),
 				"code": code,
 			})
 

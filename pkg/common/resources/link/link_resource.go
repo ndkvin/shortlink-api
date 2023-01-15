@@ -1,5 +1,9 @@
 package link
 
+import (
+	"time"
+)
+
 type CreateRequest struct {
 	Slug 			string 	`json:"slug" validate:"required,alphaunicode,min=3"`
 	Link			string 	`json:"link" validate:"required,uri"`
@@ -16,4 +20,18 @@ type CreateResponseData struct {
 	Id 				string `json:"id"`
 	Slug 			string 	`json:"name"`
 	Link			string 	`json:"email"`
+}
+
+type GetAllLinkData struct {
+	ID 				string `json:"id"`
+	Slug 			string `json:"slug"`
+	Link 			string `json:"link"`
+	IsLock 		bool	`json:"is_lock"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type GetAllLinkResponse struct {
+	Code			int 								`json:"code"`
+	Status 		string 							`json:"status"`
+	Data 			[]GetAllLinkData 		`json:"data"`
 }

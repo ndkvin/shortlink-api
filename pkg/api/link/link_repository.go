@@ -28,7 +28,7 @@ func (r *Repository) isSlugAvailable(slug string) bool {
 	return errors.Is(err, gorm.ErrRecordNotFound)
 }
 
-func (r *Repository) CreateLink(req *link.CreateRequest, userId string) (response *link.CreateResponse, err error) {
+func (r *Repository) CreateLink(req *link.CreateRequest, userId string) (res *link.CreateResponse, err error) {
 
 	var link *models.Link
 
@@ -48,6 +48,25 @@ func (r *Repository) CreateLink(req *link.CreateRequest, userId string) (respons
 		return
 	}
 
-	response = link.CreateLinkResponse()
+	res = link.CreateLinkResponse()
+	return
+}
+
+func (r *Repository) GetAllLink(userId string) (res *link.GetAllLinkResponse ,err error) {
+	var links []models.Link
+
+	if err = r.Db.Where("user_id = ?", userId).Find(&links).Error; err != nil {
+		return
+	}
+
+	res  = &link.GetAllLinkResponse{
+		Code: 200,
+		Status: "OK",
+		Data: make([]link.GetAllLinkData, len(links)),
+	}
+
+	for i := range(links) {
+		res.Data[i] = links[i].CreateResponse()
+	}
 	return
 }

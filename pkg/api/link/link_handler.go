@@ -48,3 +48,21 @@ func (h *Handler) CreateLink(c *fiber.Ctx) (err error) {
 
 	return c.Status(fiber.StatusCreated).JSON(successResponse)
 }
+
+func (h *Handler) GetAllLink(c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err :=tokenize.GetUserId(h.Db, jwt.Raw)
+
+	if err != nil {
+		return
+	}
+
+	res, err := h.Repository.GetAllLink(userId)
+
+	if err != nil {
+		return
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(res)
+}
