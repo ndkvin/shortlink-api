@@ -115,3 +115,19 @@ func (r *Repository) EditLink(req *link.CreateRequest, id, userId string) (res *
 	res = link.EditLinkResponse()
 	return 
 }
+
+func (r *Repository) DeleteLink(id, UserId string) (res *link.DeleteResponse, err error) {
+	link, err :=r.getLink(id, UserId)
+
+	if err != nil {
+		return 
+	}
+	
+	if result := r.Db.Where("user_id =?", UserId).Delete(&link); result.Error != nil {
+		err = fiber.ErrInternalServerError
+		return
+	}
+	
+	res = link.DeleteResponse()
+	return
+}

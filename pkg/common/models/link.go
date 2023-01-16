@@ -120,3 +120,13 @@ func (l *Link) EditLinkResponse() (res *link.CreateResponse) {
 
 	return
 }
+
+func (l *Link) DeleteResponse() (res *link.DeleteResponse) {
+	res = &link.DeleteResponse{
+		Code: 200,
+		Status: "OK",
+		Message: "Link Deleted",
+	}
+
+	return
+}

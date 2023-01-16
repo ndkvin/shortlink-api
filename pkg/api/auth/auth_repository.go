@@ -134,7 +134,7 @@ func (r *Repository) ChangePassword(req *auth.ChangePasswordRequest, userId stri
 	return
 }
 
-func (r *Repository) EditProfile(req *auth.EditProfileReques, userId string)(res *auth.CreateResponse, err error) {
+func (r *Repository) EditProfile(req *auth.EditProfileRequest, userId string)(res *auth.CreateResponse, err error) {
 	user, err := r.getUserById(userId)
 
 	if isAvailable := r.isEmailAvailable(req.Email); !isAvailable && user.Email != req.Email {

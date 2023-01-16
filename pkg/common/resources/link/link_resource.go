@@ -53,3 +53,9 @@ type GetLinkData struct {
 	CreatedAt time.Time	`json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type DeleteResponse struct {
+	Code				int			`json:"code"`
+	Status 			string	`json:"status"`
+	Message 		string	`json:"message"`
+}

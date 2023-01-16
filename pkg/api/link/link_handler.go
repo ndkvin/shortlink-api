@@ -110,3 +110,22 @@ func (h *Handler) EditLink(c *fiber.Ctx) (err error) {
 
 	return c.Status(fiber.StatusCreated).JSON(res)
 }
+
+func (h *Handler) DeleteLink(c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
+	
+
+	res, err := h.Repository.DeleteLink(c.Params("id"), userId)
+
+	if err != nil {
+		return
+	}
+
+
+	return c.Status(fiber.StatusOK).JSON(res)
+}

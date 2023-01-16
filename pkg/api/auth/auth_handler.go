@@ -100,7 +100,7 @@ func (h *Handler) EditProfile(c *fiber.Ctx) (err error) {
 		return
 	}
 
-	body := auth.EditProfileReques{}
+	body := auth.EditProfileRequest{}
 
 	if err = c.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -128,6 +128,10 @@ func (h *Handler) GetUser(c *fiber.Ctx) (err error) {
 	}
 
 	res, err := h.Repository.GetUser(userId)
+
+	if err != nil {
+		return
+	}
 
 	return c.Status(fiber.StatusOK).JSON(res)
 }
