@@ -58,7 +58,7 @@ func (u *User) ComparePassword(plainPassword string) bool {
 	return true
 }
 
-func (u *User) CreateRegisterResponse() (res *auth.CreateResponse) {
+func (u *User) RegisterResponse() (res *auth.CreateResponse) {
 	data := &auth.ResponseUserData{
 		ID:        u.ID,
 		Email:     u.Email,
@@ -76,7 +76,7 @@ func (u *User) CreateRegisterResponse() (res *auth.CreateResponse) {
 	return
 }
 
-func (u *User) CreateLoginResponse(accessToken string) (res *auth.LoginResponse) {
+func (u *User) LoginResponse(accessToken string) (res *auth.LoginResponse) {
 	res = &auth.LoginResponse{
 		Code:        200,
 		Status:      "OK",
@@ -87,17 +87,17 @@ func (u *User) CreateLoginResponse(accessToken string) (res *auth.LoginResponse)
 	return
 }
 
-func (u *User) CreateChangePasswordResponse() (res *auth.ChangePasswordResponse) {
+func (u *User) EditPasswordResponse() (res *auth.ChangePasswordResponse) {
 	res = &auth.ChangePasswordResponse{
 		Code: 200,
 		Status: "OK",
-		Message: "Change Password Success",
+		Message: "Edit Password Success",
 	}
 
 	return
 }
 
-func (u *User) CreateEditProfileResponse() (res *auth.CreateResponse) {
+func (u *User) EditProfileResponse() (res *auth.CreateResponse) {
 	data := &auth.ResponseUserData{
 		ID:        u.ID,
 		Email:     u.Email,
@@ -109,6 +109,24 @@ func (u *User) CreateEditProfileResponse() (res *auth.CreateResponse) {
 		Code:    200,
 		Status:  "OK",
 		Message: "User updaetd",
+		Data:    data,
+	}
+
+	return
+}
+
+func (u *User) GetUserResponse() (res *auth.CreateResponse) {
+	data := &auth.ResponseUserData{
+		ID:        u.ID,
+		Email:     u.Email,
+		Name:      u.Name,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}
+	res = &auth.CreateResponse{
+		Code:    200,
+		Status:  "OK",
+		Message: "Success",
 		Data:    data,
 	}
 

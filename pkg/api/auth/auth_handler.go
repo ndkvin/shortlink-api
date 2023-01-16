@@ -60,7 +60,7 @@ func (h *Handler) Login(c *fiber.Ctx) (err error) {
 	} 
 
 	jwtToken, _ := tokenize.GenereateToken(user.ID)
-	response := user.CreateLoginResponse(jwtToken)
+	response := user.LoginResponse(jwtToken)
 	
 	return c.Status(200).JSON(response)
 }
@@ -68,7 +68,7 @@ func (h *Handler) Login(c *fiber.Ctx) (err error) {
 func (h *Handler) ChangePassword(c *fiber.Ctx) (err error) {
 	jwt := c.Locals("user").(*jwt.Token)
 
-	userId, err :=tokenize.GetUserId(h.Db, jwt.Raw)
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
 	if err != nil {
 		return
 	}
@@ -95,7 +95,7 @@ func (h *Handler) ChangePassword(c *fiber.Ctx) (err error) {
 func (h *Handler) EditProfile(c *fiber.Ctx) (err error) {
 	jwt := c.Locals("user").(*jwt.Token)
 
-	userId, err :=tokenize.GetUserId(h.Db, jwt.Raw)
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
 	if err != nil {
 		return
 	}
@@ -115,6 +115,19 @@ func (h *Handler) EditProfile(c *fiber.Ctx) (err error) {
 	if err != nil {
 		return
 	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
+}
+
+func (h *Handler) GetUser(c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
+
+	res, err := h.Repository.GetUser(userId)
 
 	return c.Status(fiber.StatusOK).JSON(res)
 }

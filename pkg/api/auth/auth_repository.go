@@ -48,7 +48,7 @@ func (r *Repository) CareateUser(req *auth.CreateRequest) (successResponse *auth
 		return
 	}
 
-	successResponse = user.CreateRegisterResponse()
+	successResponse = user.RegisterResponse()
 	return
 }
 
@@ -130,7 +130,7 @@ func (r *Repository) ChangePassword(req *auth.ChangePasswordRequest, userId stri
 		return
 	}
 
-	successResponse = user.CreateChangePasswordResponse()
+	successResponse = user.EditPasswordResponse()
 	return
 }
 
@@ -150,6 +150,13 @@ func (r *Repository) EditProfile(req *auth.EditProfileReques, userId string)(res
 		return
 	}
 
-	res = user.CreateEditProfileResponse()
+	res = user.EditProfileResponse()
+	return
+}
+
+func (r *Repository) GetUser(userId string) (res *auth.CreateResponse, err error) {
+	user, err := r.getUserById(userId)
+
+	res = user.GetUserResponse()
 	return
 }
