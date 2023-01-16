@@ -14,11 +14,12 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	validator := NewValidation(validator.New())
 	h := NewHandler(Db,repository,validator)
 
-	user := app.Group("/link");
+	link := app.Group("/link");
 
-	user.Post("/", middleware.Auth(), h.CreateLink)
-	user.Get("/", middleware.Auth(), h.GetAllLink)
-	user.Get("/:id", middleware.Auth(), h.GetLink)
-	user.Put("/:id", middleware.Auth(), h.EditLink)
-	user.Delete("/:id", middleware.Auth(), h.DeleteLink)
+	link.Post("/", middleware.Auth(), h.CreateLink)
+	link.Get("/", middleware.Auth(), h.GetAllLink)
+	link.Get("/:id", middleware.Auth(), h.GetLink)
+	link.Put("/:id", middleware.Auth(), h.EditLink)
+	link.Delete("/:id", middleware.Auth(), h.DeleteLink)
+
 }

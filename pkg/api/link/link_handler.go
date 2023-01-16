@@ -46,6 +46,10 @@ func (h *Handler) CreateLink(c *fiber.Ctx) (err error) {
 		return
 	}
 
+	if err = CreateQR(successResponse.Data.Id, successResponse.Data.Slug); err != nil {
+		return
+	}
+
 	return c.Status(fiber.StatusCreated).JSON(successResponse)
 }
 
@@ -118,14 +122,12 @@ func (h *Handler) DeleteLink(c *fiber.Ctx) (err error) {
 	if err != nil {
 		return
 	}
-	
 
 	res, err := h.Repository.DeleteLink(c.Params("id"), userId)
 
 	if err != nil {
 		return
 	}
-
 
 	return c.Status(fiber.StatusOK).JSON(res)
 }

@@ -21,6 +21,7 @@ func main () {
 	// register service
 	auth.Register(app, db)
 	link.Register(app, db)
+	app.Static("/", "./public")
 
 	app.Listen(":8080")
 }
