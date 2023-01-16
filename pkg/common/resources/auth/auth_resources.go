@@ -47,3 +47,8 @@ type ChangePasswordResponse struct {
 	Status 			string	`json:"status"`
 	Message 		string	`json:"message"`
 }
+
+type EditProfileReques struct {
+	Email	string	`json:"email" validate:"required,email"`
+	Name	string	`json:"name" validate:"required,alphaunicode,min=3,max=16"`
+}

@@ -133,3 +133,23 @@ func (r *Repository) ChangePassword(req *auth.ChangePasswordRequest, userId stri
 	successResponse = user.CreateChangePasswordResponse()
 	return
 }
+
+func (r *Repository) EditProfile(req *auth.EditProfileReques, userId string)(res *auth.CreateResponse, err error) {
+	user, err := r.getUserById(userId)
+
+	if isAvailable := r.isEmailAvailable(req.Email); !isAvailable && user.Email != req.Email {
+		err = fiber.NewError(fiber.StatusBadRequest, "Email has been taken")
+		return
+	}
+
+	user.Email = req.Email
+	user.Name = req.Name
+
+	if result := r.Db.Save(user); result.Error != nil {
+		err = fiber.ErrInternalServerError
+		return
+	}
+
+	res = user.CreateEditProfileResponse()
+	return
+}

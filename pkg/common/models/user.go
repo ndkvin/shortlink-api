@@ -96,3 +96,21 @@ func (u *User) CreateChangePasswordResponse() (res *auth.ChangePasswordResponse)
 
 	return
 }
+
+func (u *User) CreateEditProfileResponse() (res *auth.CreateResponse) {
+	data := &auth.ResponseUserData{
+		ID:        u.ID,
+		Email:     u.Email,
+		Name:      u.Name,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
+	}
+	res = &auth.CreateResponse{
+		Code:    200,
+		Status:  "OK",
+		Message: "User updaetd",
+		Data:    data,
+	}
+
+	return
+}

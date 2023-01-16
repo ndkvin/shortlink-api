@@ -99,7 +99,7 @@ func (r *Repository) EditLink(req *link.CreateRequest, id, userId string) (res *
 		return
 	}
 
-	if islAvailable := r.isSlugAvailable(req.Slug); !islAvailable {
+	if islAvailable := r.isSlugAvailable(req.Slug); !islAvailable && link.Slug != req.Slug  {
 		err = fiber.NewError(fiber.StatusBadRequest, "Name has been taken")
 		return
 	}

@@ -82,7 +82,7 @@ func (h *Handler) ChangePassword(c *fiber.Ctx) (err error) {
 	if err = h.Validation.ChangePasswordValidation(&body); err != nil{
 		return
 	}
-	
+
 	response, err := h.Repository.ChangePassword(&body, userId)
 
 	if err != nil {
@@ -90,4 +90,31 @@ func (h *Handler) ChangePassword(c *fiber.Ctx) (err error) {
 	}
 
 	return c.Status(200).JSON(response)
+}
+
+func (h *Handler) EditProfile(c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err :=tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
+
+	body := auth.EditProfileReques{}
+
+	if err = c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err = h.Validation.EditProfileValidation(&body); err != nil{
+		return
+	}
+	
+	res, err := h.Repository.EditProfile(&body, userId)
+
+	if err != nil {
+		return
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
 }

@@ -10,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	// "github.com/gofiber/fiber/v2/middleware/csrf"
 )
 
 func Register(app *fiber.App) {

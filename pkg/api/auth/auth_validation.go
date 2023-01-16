@@ -45,3 +45,12 @@ func (v *Validation) ChangePasswordValidation(req *auth.ChangePasswordRequest) (
 
 	return
 }
+
+func (v *Validation) EditProfileValidation(req *auth.EditProfileReques) (err error) {
+	if err = v.Validator.Struct(req); err != nil {
+		err = fiber.NewError(400, err.Error())
+		return
+	}
+
+	return
+}
