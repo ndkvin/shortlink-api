@@ -150,3 +150,26 @@ func (r *Repository) AddPassword(id, password, userId string) (res *link.Respons
 	res = link.AddPasswordResponse()
 	return 
 }
+
+func (r *Repository) EditPassword(req *link.EditPasswordRequest, id, userId string) (res *link.Response,err error) {
+	link, err := r.getLink(id, userId)
+	if err != nil {
+		return
+	}
+
+	if result := link.ComparePassword(req.OldPassword); !result {
+		err = fiber.NewError(fiber.StatusBadRequest, "Old password not match")
+		return
+	}
+
+	link.Password =  req.NewPassword
+	link.HashPassword()
+
+	if result := r.Db.Save(link); result.Error != nil {
+		err = fiber.ErrInternalServerError
+		return
+	}
+
+	res = link.EditPasswordResponse()
+	return 
+}

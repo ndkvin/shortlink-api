@@ -36,3 +36,12 @@ func (v *Validation) AddPasswordValidation(req *link.AddPasswordRequest) (err er
 
 	return
 }
+
+func (v *Validation) EditPasswordValidation(req *link.EditPasswordRequest) (err error) {
+	if err = v.Validator.Struct(req); err!=nil {
+		err = fiber.NewError(400, err.Error())
+		return
+	}
+
+	return
+}

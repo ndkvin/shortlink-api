@@ -21,6 +21,7 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	link.Get("/:id", middleware.Auth(), h.GetLink)
 	link.Put("/:id", middleware.Auth(), h.EditLink)
 	link.Patch("/:id", middleware.Auth(), h.AddPassword)
+	link.Patch("/edit/:id", middleware.Auth(), h.EditPassword)
 	link.Delete("/:id", middleware.Auth(), h.DeleteLink)
 
 }
