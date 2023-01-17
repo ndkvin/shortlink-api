@@ -138,6 +138,11 @@ func (r *Repository) AddPassword(id, password, userId string) (res *link.Respons
 		return
 	}
 
+	if link.Password != "" {
+		err = fiber.NewError(fiber.StatusForbidden, "No Access")
+		return 
+	}
+
 	link.Password = password
 
 	link.HashPassword()
@@ -151,7 +156,24 @@ func (r *Repository) AddPassword(id, password, userId string) (res *link.Respons
 	return 
 }
 
-func (r *Repository) EditPassword(req *link.EditPasswordRequest, id, userId string) (res *link.Response,err error) {
+func (r *Repository) editPassword(link *models.Link, newPassword string) (err error) {
+	link.Password  = newPassword
+
+	if newPassword == "" {
+		r.Db.Save(link)
+		return
+	}
+
+	link.HashPassword()
+
+	if res := r.Db.Save(link); res.Error != nil {
+		return fiber.ErrInternalServerError
+	}
+
+	return
+}
+
+func (r *Repository) EditPassword(req *link.EditPasswordRequest, id, userId string) (res *link.Response, err error) {
 	link, err := r.getLink(id, userId)
 	if err != nil {
 		return
@@ -162,14 +184,29 @@ func (r *Repository) EditPassword(req *link.EditPasswordRequest, id, userId stri
 		return
 	}
 
-	link.Password =  req.NewPassword
-	link.HashPassword()
-
-	if result := r.Db.Save(link); result.Error != nil {
-		err = fiber.ErrInternalServerError
+	if err = r.editPassword(link, req.NewPassword); err != nil {
 		return
 	}
 
 	res = link.EditPasswordResponse()
+	return 
+}
+
+func (r *Repository) DeletePassword(id, password, userId string) (res *link.Response, err error) {
+	link, err := r.getLink(id, userId)
+	if err != nil {
+		return
+	}
+
+	if result := link.ComparePassword(password); !result {
+		err = fiber.NewError(fiber.StatusBadRequest, "Old password not match")
+		return
+	}
+
+	if err = r.editPassword(link, ""); err != nil {
+		return
+	}
+
+	res = link.DeletePasswordResponse()
 	return 
 }

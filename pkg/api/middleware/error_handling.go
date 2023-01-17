@@ -35,6 +35,16 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 			return err
 		}
 
+		if code == 403 {
+			err = ctx.Status(code).JSON(fiber.Map{
+				"status": "Forbidden",
+				"message": err.Error(),
+				"code": code,
+			})
+
+			return err
+		}
+
 		if code == 404 {
 			err = ctx.Status(code).JSON(fiber.Map{
 				"status": "Not Found",

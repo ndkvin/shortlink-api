@@ -171,6 +171,16 @@ func (l *Link) EditPasswordResponse() (res *link.Response) {
 	return
 }
 
+func (l *Link) DeletePasswordResponse() (res *link.Response) {
+	res = &link.Response{
+		Code: 200,
+		Status: "OK",
+		Message: "Password removed",
+	}
+
+	return
+}
+
 func (l *Link) VisitLinkResponse() (res *visit_link.VisitLinkResponse) {
 	res = &visit_link.VisitLinkResponse{
 		Code: 200,
