@@ -53,8 +53,17 @@ type GetLinkData struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type DeleteResponse struct {
+type Response struct {
 	Code				int			`json:"code"`
 	Status 			string	`json:"status"`
 	Message 		string	`json:"message"`
+}
+
+type AddPasswordRequest struct {
+	Password	string 	`json:"password" validate:"required,ascii,min=8"`
+}
+
+type EditPasswordRequest struct {
+	OldPassword	string 	`json:"old_password" validate:"required,ascii,min=8"`
+	NewPassword	string 	`json:"new_password" validate:"required,ascii,min=8"`
 }

@@ -23,7 +23,7 @@ func (r *Repository) getLink(slug string) (link *models.Link, err error) {
 	return
 }
 
-func (r *Repository) VisitLink(slug, ip string) (res interface{},err error) {
+func (r *Repository) VisitLink(slug, ip string) (res interface{}, err error) {
 	link, err := r.getLink(slug)
 
 	if err != nil {

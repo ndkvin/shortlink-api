@@ -18,7 +18,7 @@ func Register(app *fiber.App,Db *gorm.DB) {
 
 	user.Post("/", h.CreateUser)
 	user.Get("/", middleware.Auth(), h.GetUser)
-	user.Put("/password", middleware.Auth(), h.ChangePassword)
-	user.Put("/profile", middleware.Auth(), h.EditProfile)
+	user.Patch("/password", middleware.Auth(), h.ChangePassword)
+	user.Patch("/profile", middleware.Auth(), h.EditProfile)
 	user.Post("/login", h.Login)
 }

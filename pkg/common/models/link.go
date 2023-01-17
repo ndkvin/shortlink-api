@@ -1,11 +1,13 @@
 package models
 
 import (
+	"log"
 	"shortlink/pkg/common/resources/link"
 	"shortlink/pkg/common/resources/visit_link"
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -26,6 +28,25 @@ func (l *Link) BeforeCreate(tx *gorm.DB) error {
 	l.ID = uuid.NewString()
 
 	return nil
+}
+
+func (l *Link) HashPassword() error {
+	hasedPassword, err := bcrypt.GenerateFromPassword([]byte(l.Password), 10)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	l.Password = string(hasedPassword)
+
+	return nil
+}
+
+func (l *Link) ComparePassword(plainPassword string) bool {
+	if err := bcrypt.CompareHashAndPassword([]byte(l.Password), []byte(plainPassword)); err != nil {
+		return false
+	}
+
+	return true
 }
 
 func (l *Link) CreateRequest(req *link.CreateRequest) (link *Link) {
@@ -111,8 +132,8 @@ func (l *Link) EditLinkResponse() (res *link.CreateResponse) {
 	}
 
 	res = &link.CreateResponse{
-		Code: 201,
-		Status: "Edited",
+		Code: 200,
+		Status: "OK",
 		Message: "Link Edited",
 		Data: data,
 	}
@@ -120,11 +141,21 @@ func (l *Link) EditLinkResponse() (res *link.CreateResponse) {
 	return
 }
 
-func (l *Link) DeleteResponse() (res *link.DeleteResponse) {
-	res = &link.DeleteResponse{
+func (l *Link) DeleteResponse() (res *link.Response) {
+	res = &link.Response{
 		Code: 200,
 		Status: "OK",
 		Message: "Link Deleted",
+	}
+
+	return
+}
+
+func (l *Link) AddPasswordResponse() (res *link.Response) {
+	res = &link.Response{
+		Code: 200,
+		Status: "OK",
+		Message: "Password Set",
 	}
 
 	return

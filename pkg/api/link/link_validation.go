@@ -27,3 +27,12 @@ func (v *Validation) CreateLinkValidation(req *link.CreateRequest) (err error) {
 
 	return
 }
+
+func (v *Validation) AddPasswordValidation(req *link.AddPasswordRequest) (err error) {
+	if err = v.Validator.Struct(req); err!=nil {
+		err = fiber.NewError(400, err.Error())
+		return
+	}
+
+	return
+}

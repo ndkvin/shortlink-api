@@ -116,7 +116,7 @@ func (r *Repository) EditLink(req *link.CreateRequest, id, userId string) (res *
 	return 
 }
 
-func (r *Repository) DeleteLink(id, UserId string) (res *link.DeleteResponse, err error) {
+func (r *Repository) DeleteLink(id, UserId string) (res *link.Response, err error) {
 	link, err :=r.getLink(id, UserId)
 
 	if err != nil {
@@ -130,4 +130,23 @@ func (r *Repository) DeleteLink(id, UserId string) (res *link.DeleteResponse, er
 	
 	res = link.DeleteResponse()
 	return
+}
+
+func (r *Repository) AddPassword(id, password, userId string) (res *link.Response, err error) {
+	link, err := r.getLink(id, userId)
+	if err != nil {
+		return
+	}
+
+	link.Password = password
+
+	link.HashPassword()
+
+	if result := r.Db.Save(link); result.Error != nil {
+		err = fiber.ErrInternalServerError
+		return
+	}
+
+	res = link.AddPasswordResponse()
+	return 
 }
