@@ -21,3 +21,12 @@ func (v *VisitLink) BeforeCreate(tx *gorm.DB) error {
 
 	return nil
 }
+
+func (v *VisitLink) CreateRequest(linkId, ip string) (visit_link *VisitLink) {
+	visit_link = &VisitLink{
+		IP: ip,
+		LinkID: linkId,
+	}
+
+	return
+}

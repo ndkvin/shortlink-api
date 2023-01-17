@@ -23,6 +23,18 @@ func (r *Repository) getLink(slug string) (link *models.Link, err error) {
 	return
 }
 
+func (r *Repository) addVisitLink(linkId, ip string) (err error) {
+	var visit_link *models.VisitLink
+
+	visit_link = visit_link.CreateRequest(linkId, ip)
+
+	if res := r.Db.Create(&visit_link); res.Error != nil {
+		return fiber.ErrInternalServerError
+	}
+
+	return
+}
+
 func (r *Repository) VisitLink(slug, ip string) (res interface{}, err error) {
 	link, err := r.getLink(slug)
 
@@ -33,6 +45,10 @@ func (r *Repository) VisitLink(slug, ip string) (res interface{}, err error) {
 
 	if link.Password != "" {
 		res = link.VisitlinkPasswordResponse()
+		return
+	}
+
+	if err = r.addVisitLink(link.ID, ip); err != nil {
 		return
 	}
 
