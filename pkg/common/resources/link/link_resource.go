@@ -49,7 +49,6 @@ type GetLinkData struct {
 	Link 			string 		`json:"link"`
 	Password	bool 			`json:"password"`
 	IsLock 		bool			`json:"is_lock"`
-	Qr 				string 		`json:"qr"`
 	CreatedAt time.Time	`json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -2,6 +2,7 @@ package models
 
 import (
 	"shortlink/pkg/common/resources/link"
+	"shortlink/pkg/common/resources/visit_link"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,7 +15,6 @@ type Link struct {
 	Password 	string
 	Slug 			string
 	Link 			string
-	Qr 				string
 	IsLock 		bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -89,7 +89,6 @@ func (l *Link) CreateDetailResponse() (res *link.GetLinkResponse) {
     Slug: l.Slug,
     Link: l.Link,
     IsLock: l.IsLock,
-    Qr: l.Qr,
 		Password: isPassworded,
     CreatedAt: l.CreatedAt,
     UpdatedAt: l.UpdatedAt,
@@ -128,5 +127,23 @@ func (l *Link) DeleteResponse() (res *link.DeleteResponse) {
 		Message: "Link Deleted",
 	}
 
+	return
+}
+
+func (l *Link) VisitLinkResponse() (res *visit_link.VisitLinkResponse) {
+	res = &visit_link.VisitLinkResponse{
+		Code: 200,
+    Status: "OK",
+    Link: l.Link,
+	}
+	return
+}
+
+func (l *Link) VisitlinkPasswordResponse() (res *visit_link.VisitLinkPasswordResponse) {
+	res = &visit_link.VisitLinkPasswordResponse{
+		Code: 200,
+    Status: "OK",
+		Password: true,
+	}
 	return
 }
