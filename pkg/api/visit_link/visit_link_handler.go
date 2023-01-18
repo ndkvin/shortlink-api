@@ -40,3 +40,22 @@ func (h *Handler) VisitLink(c *fiber.Ctx) (err error) {
 
 	return c.Status(200).JSON(res)
 }
+
+func (h *Handler) VisitLinkPassword(c *fiber.Ctx) (err error) {
+	body := &visit_link.VisitLinkPasswordRequest{}
+
+	if err := c.BodyParser(&body); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err = h.Validation.VisitLinkPasswordValidation(body); err != nil {
+		return
+	}
+
+	res, err := h.Repository.VisitLinkPassword(c.Params("slug"), body)
+	if err != nil {
+		return
+	}
+
+	return c.Status(200).JSON(res)
+}

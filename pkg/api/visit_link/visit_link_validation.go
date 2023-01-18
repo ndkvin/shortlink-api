@@ -27,3 +27,12 @@ func (v *Validation) VisitLinkValidation(req *visit_link.VisitLinkRequest) (err 
 
 	return
 }
+
+func (v *Validation) VisitLinkPasswordValidation(req *visit_link.VisitLinkPasswordRequest) (err error) {
+	if err = v.Validator.Struct(req); err!=nil {
+		err = fiber.NewError(400, err.Error())
+		return
+	}
+
+	return
+}

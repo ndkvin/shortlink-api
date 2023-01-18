@@ -5,6 +5,11 @@ type VisitLinkRequest struct {
 	IP	string	`json:"ip" validate:"required,ipv4"`
 }	
 
+type VisitLinkPasswordRequest struct {
+	IP	string	`json:"ip" validate:"required,ipv4"`
+	Password	string 	`json:"password" validate:"required,ascii,min=8"`
+}	
+
 type VisitLinkResponse struct {
 	Code			int 		`json:"code"`
 	Status 		string 	`json:"status"`

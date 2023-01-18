@@ -2,6 +2,7 @@ package visit_link
 
 import (
 	"shortlink/pkg/common/models"
+	"shortlink/pkg/common/resources/visit_link"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -49,6 +50,23 @@ func (r *Repository) VisitLink(slug, ip string) (res interface{}, err error) {
 	}
 
 	if err = r.addVisitLink(link.ID, ip); err != nil {
+		return
+	}
+
+	res = link.VisitLinkResponse()
+	return
+}
+
+func (r *Repository) VisitLinkPassword(slug string, body *visit_link.VisitLinkPasswordRequest) (res *visit_link.VisitLinkResponse, err error) {
+	link, err := r.getLink(slug)
+
+	if err != nil {
+		err = fiber.NewError(fiber.StatusNotFound, "Link Not Found")
+		return
+	}
+
+	if result := link.ComparePassword(body.Password); !result {
+		err = fiber.NewError(fiber.StatusBadRequest, "Password not match")
 		return
 	}
 

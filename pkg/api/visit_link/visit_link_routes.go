@@ -15,5 +15,5 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	link := app.Group("/visit");
 
 	link.Post("/:slug", h.VisitLink)
-
+	link.Post("/password/:slug", h.VisitLinkPassword)
 }

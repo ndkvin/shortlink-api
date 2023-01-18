@@ -130,3 +130,10 @@
 [17-Jan-2023 - 23:30:20] 127.0.0.1:34104 200 1.714586ms - POST /visit/aaaaakenapa
 [17-Jan-2023 - 23:30:21] 127.0.0.1:34104 200 1.124816ms - POST /visit/aaaaakenapa
 [17-Jan-2023 - 23:30:22] 127.0.0.1:34104 200 1.958357ms - POST /visit/aaaaakenapa
+[18-Jan-2023 - 14:27:34] 127.0.0.1:50800 200 1.038037ms - POST /visit/aaaaakenapa
+[18-Jan-2023 - 14:28:13] 127.0.0.1:50800 200 108.147052ms - POST /visit/password/aaaaakenapa
+[18-Jan-2023 - 14:31:39] 127.0.0.1:50800 400 81.582µs - POST /visit/password/aaaaakenapa
+[18-Jan-2023 - 14:31:45] 127.0.0.1:50800 400 84.346µs - POST /visit/password/aaaaakenapa
+[18-Jan-2023 - 14:31:49] 127.0.0.1:50800 500 109.782326ms - POST /visit/password/aaaaakenapa
+[18-Jan-2023 - 14:32:00] 127.0.0.1:50800 500 110.173345ms - POST /visit/password/aaaaakenapa
+[18-Jan-2023 - 14:33:05] 127.0.0.1:53874 400 129.68531ms - POST /visit/password/aaaaakenapa
