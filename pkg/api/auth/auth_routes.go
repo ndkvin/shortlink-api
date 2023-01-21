@@ -14,6 +14,16 @@ func Register(app *fiber.App,Db *gorm.DB) {
 	validator := NewValidation(validator.New())
 	h := NewHandler(Db,repository,validator)
 
+	app.Get("/", func(c *fiber.Ctx) error {
+		type Struct struct {
+			Status string `json:"status"`
+		}
+		res := Struct{
+			Status: "OK",
+		}
+		return c.Status(200).JSON(res)
+	})
+
 	user := app.Group("/user");
 
 	user.Post("/", h.CreateUser)

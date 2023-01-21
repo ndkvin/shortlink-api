@@ -38,7 +38,7 @@ func (h *Handler) CreateUser(c *fiber.Ctx) (err error) {
 	if err != nil {
 		return
 	}
-
+	c.Set(fiber.HeaderAccessControlAllowOrigin, "http://localhost:3000")
 	return c.Status(fiber.StatusCreated).JSON(successResponse)
 }
 
@@ -59,7 +59,7 @@ func (h *Handler) Login(c *fiber.Ctx) (err error) {
 		return err
 	} 
 
-	jwtToken, _ := tokenize.GenereateToken(user.ID)
+	jwtToken, _ := tokenize.GenereateToken(user.ID, user.Name)
 	response := user.LoginResponse(jwtToken)
 	
 	return c.Status(200).JSON(response)

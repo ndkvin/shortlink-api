@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GenereateToken(userId string) (token string, err error) {
+func GenereateToken(userId, name string) (token string, err error) {
 	mySigningKey := []byte(config.GetEnv("JWT_TOKEN"))
 
 	t := jwt.New(jwt.SigningMethodHS256)
@@ -19,6 +19,7 @@ func GenereateToken(userId string) (token string, err error) {
 	claims := t.Claims.(jwt.MapClaims)
 
 	claims["id"] = userId
+	claims["name"] = name
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	token, err = t.SignedString(mySigningKey)

@@ -16,7 +16,7 @@ func main () {
 	app := fiber.New(fiber.Config{
     ErrorHandler: middleware.ErrorHandler,
 	})
-	
+
 	middleware.Register(app)
 
 	// register service
