@@ -38,7 +38,7 @@ func (h *Handler) CreateUser(c *fiber.Ctx) (err error) {
 	if err != nil {
 		return
 	}
-	c.Set(fiber.HeaderAccessControlAllowOrigin, "http://localhost:3000")
+
 	return c.Status(fiber.StatusCreated).JSON(successResponse)
 }
 
