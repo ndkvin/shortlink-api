@@ -1,4 +1,4 @@
-prod:
+dev:
 	air -c .air.toml
 
 build:
