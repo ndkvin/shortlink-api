@@ -27,6 +27,7 @@ type GetAllLinkData struct {
 	Slug 			string 		`json:"slug"`
 	Link 			string 		`json:"link"`
 	Password	bool 			`json:"password"`
+	Qr				string		`json:"qr"`
 	IsLock 		bool			`json:"is_lock"`
 	CreatedAt time.Time `json:"created_at"`
 }

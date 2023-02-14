@@ -2,6 +2,7 @@ package link
 
 import (
 	"errors"
+	"fmt"
 
 	"shortlink/pkg/common/models"
 	"shortlink/pkg/common/resources/link"
@@ -28,12 +29,13 @@ func (r *Repository) isSlugAvailable(slug string) bool {
 	return errors.Is(err, gorm.ErrRecordNotFound)
 }
 
-func (r *Repository) CreateLink(req *link.CreateRequest, userId string) (res *link.CreateResponse, err error) {
+func (r *Repository) CreateLink(req *link.CreateRequest, userId, qr string) (res *link.CreateResponse, err error) {
 
 	var link *models.Link
 
 	link = link.CreateRequest(req)
 	link.UserID = userId
+	link.Qr = qr
 
 	if islAvailable := r.isSlugAvailable(link.Slug); !islAvailable {
 		err = fiber.NewError(fiber.StatusBadRequest, "Name has been taken")
@@ -92,10 +94,15 @@ func (r *Repository) GetLink(id, userId string) (res *link.GetLinkResponse, err 
 	return
 }
 
-func (r *Repository) EditLink(req *link.CreateRequest, id, userId string) (res *link.CreateResponse, err error) {
+func (r *Repository) EditLink(req *link.CreateRequest, id, userId, qr string) (res *link.CreateResponse, err error) {
 	link, err := r.getLink(id, userId)
 
 	if  err != nil {
+		return
+	}
+	fmt.Println(link.Qr)
+
+	if err = DeleteQR(link.Qr); err !=  nil {
 		return
 	}
 
@@ -106,6 +113,7 @@ func (r *Repository) EditLink(req *link.CreateRequest, id, userId string) (res *
 
 	link.Link = req.Link
 	link.Slug = req.Slug
+	link.Qr = qr
 
 	if result := r.Db.Save(link); result.Error != nil {
 		err = fiber.ErrInternalServerError

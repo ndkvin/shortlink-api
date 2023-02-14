@@ -14,6 +14,7 @@ import (
 type Link struct {
 	ID 				string
 	UserID 		string `gorm:"type:uuid;default:nill"`
+	Qr 				string `gorm:"type:uuid"`
 	Password 	string
 	Slug 			string
 	Link 			string
@@ -88,6 +89,7 @@ func (l *Link) CreateResponse() (res link.GetAllLinkData) {
 		ID: l.ID,
     Slug : l.Slug,
     Link: l.Link,
+		Qr: l.Qr,
 		Password: isPassworded,
     IsLock: l.IsLock,
     CreatedAt: l.CreatedAt,

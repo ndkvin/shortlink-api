@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -41,12 +42,14 @@ func (h *Handler) CreateLink(c *fiber.Ctx) (err error) {
 		return
 	}
 
-	successResponse, err := h.Repository.CreateLink(&body, userId)
+	qr := uuid.NewString()
+
+	successResponse, err := h.Repository.CreateLink(&body, userId, qr)
 	if err != nil {
 		return
 	}
 
-	if err = CreateQR(successResponse.Data.Id, successResponse.Data.Slug); err != nil {
+	if err = CreateQR(qr, successResponse.Data.Slug); err != nil {
 		return
 	}
 
@@ -107,8 +110,14 @@ func (h *Handler) EditLink(c *fiber.Ctx) (err error) {
 		return
 	}
 
-	res, err := h.Repository.EditLink(&body, c.Params("id"), userId)
+	qr := uuid.NewString()
+
+	res, err := h.Repository.EditLink(&body, c.Params("id"), userId, qr)
 	if err != nil {
+		return
+	}
+
+	if err = CreateQR(qr, res.Data.Slug); err != nil {
 		return
 	}
 

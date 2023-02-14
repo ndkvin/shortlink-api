@@ -14,16 +14,20 @@ import (
 )
 
 func Register(app *fiber.App) {
+	// cors
 	app.Use(cors.New(cors.Config{
 		AllowHeaders:     "Origin,Content-Type,X-CSRF-Token,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin,Authorization",
 		AllowOrigins:     "http://localhost:3000",
 		AllowCredentials: true,
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
 	}))
-	// recover
+
+	// csrf
 	app.Use(csrf.New(csrf.Config{
 		CookieSecure: true,
 	}))
+
+	// recover
 	app.Use(recover.New())
 
 	// limitter
@@ -44,10 +48,4 @@ func Register(app *fiber.App) {
 
 	// monitoring
 	app.Get("/monitor", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
-
-	// cors
-
-
-	//csrf
-
 }
