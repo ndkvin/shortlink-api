@@ -32,7 +32,7 @@ func Register(app *fiber.App) {
 
 	// limitter
 	app.Use(limiter.New(limiter.Config{
-		Max: 20,
+		Max: 100,
 	}))
 
 	// logger

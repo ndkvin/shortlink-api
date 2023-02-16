@@ -200,6 +200,26 @@ func (r *Repository) EditPassword(req *link.EditPasswordRequest, id, userId stri
 	return 
 }
 
+func (r *Repository) lockLink(link *models.Link) (err error) {
+	link.IsLock  = true
+
+	if res := r.Db.Save(link); res.Error != nil {
+		return fiber.ErrInternalServerError
+	}
+
+	return
+}
+
+func (r *Repository) unlockLink(link *models.Link) (err error) {
+	link.IsLock  = false
+
+	if res := r.Db.Save(link); res.Error != nil {
+		return fiber.ErrInternalServerError
+	}
+
+	return
+}
+
 func (r *Repository) DeletePassword(id, password, userId string) (res *link.Response, err error) {
 	link, err := r.getLink(id, userId)
 	if err != nil {
@@ -216,5 +236,37 @@ func (r *Repository) DeletePassword(id, password, userId string) (res *link.Resp
 	}
 
 	res = link.DeletePasswordResponse()
+	return 
+}
+
+func (r *Repository) LockLink(id, userId string) (res *link.Response, err error) {
+	link, err := r.getLink(id, userId)
+
+	if err != nil {
+		return
+	}
+
+	if err = r.lockLink(link); err != nil {
+		return
+	}
+
+	res = link.LockLinkResponse()
+
+	return 
+}
+
+func (r *Repository) UnlockLink(id, userId string) (res *link.Response, err error) {
+	link, err := r.getLink(id, userId)
+
+	if err != nil {
+		return
+	}
+
+	if err = r.unlockLink(link); err != nil {
+		return
+	}
+
+	res = link.UnlockLinkResponse()
+
 	return 
 }

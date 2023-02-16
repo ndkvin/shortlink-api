@@ -218,3 +218,35 @@ func (h *Handler) DeletePassword (c *fiber.Ctx) (err error) {
 
 	return c.Status(fiber.StatusOK).JSON(res)
 }
+
+func (h *Handler) LockLink (c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
+
+	res, err := h.Repository.LockLink(c.Params("id"), userId)
+	if err != nil {
+		return
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
+}
+
+func (h *Handler) UnlockLink (c *fiber.Ctx) (err error) {
+	jwt := c.Locals("user").(*jwt.Token)
+
+	userId, err := tokenize.GetUserId(h.Db, jwt.Raw)
+	if err != nil {
+		return
+	}
+
+	res, err := h.Repository.UnlockLink(c.Params("id"), userId)
+	if err != nil {
+		return
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
+}

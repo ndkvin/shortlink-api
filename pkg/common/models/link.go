@@ -14,7 +14,7 @@ import (
 type Link struct {
 	ID 				string
 	UserID 		string `gorm:"type:uuid;default:nill"`
-	Qr 				string `gorm:"type:uuid"`
+	Qr 				string
 	Password 	string
 	Slug 			string
 	Link 			string
@@ -178,6 +178,26 @@ func (l *Link) DeletePasswordResponse() (res *link.Response) {
 		Code: 200,
 		Status: "OK",
 		Message: "Password removed",
+	}
+
+	return
+}
+
+func (l *Link) LockLinkResponse() (res *link.Response) {
+	res = &link.Response{
+		Code: 200,
+		Status: "OK",
+		Message: "Link Locked",
+	}
+
+	return
+}
+
+func (l *Link) UnlockLinkResponse() (res *link.Response) {
+	res = &link.Response{
+		Code: 200,
+		Status: "OK",
+		Message: "Link Unlocked",
 	}
 
 	return

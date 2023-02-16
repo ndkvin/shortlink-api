@@ -13,7 +13,7 @@ type VisitLink struct {
 	IP 				string
 	CreatedAt time.Time
 
-	Link Link
+	Link Link `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 func (v *VisitLink) BeforeCreate(tx *gorm.DB) error {
